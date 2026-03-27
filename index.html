@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZenSpace Pro | Yogeshwar Edition</title>
+    <style>
+        :root { --blue: #38bdf8; --gold: #f59e0b; --bg: #030712; --glass: rgba(255, 255, 255, 0.03); }
+        
+        body { 
+            margin: 0; background: var(--bg); color: #fff; 
+            font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; height: 100vh;
+        }
+
+        /* 1. ANCIENT AESTHETIC LAYER */
+        .pashupati-bg {
+            position: fixed; inset: 0; background-image: url('pashupati.png');
+            background-size: cover; background-position: center; opacity: 0.15;
+            filter: sepia(0.6) contrast(1.1); z-index: -1;
+        }
+
+        .app-shell {
+            height: 100vh; display: flex; flex-direction: column; align-items: center;
+            justify-content: space-between; padding: 40px 20px; box-sizing: border-box;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.05) 0%, transparent 70%);
+        }
+
+        /* 2. HEADER & STREAK */
+        .header { width: 100%; display: flex; justify-content: space-between; font-size: 0.7rem; letter-spacing: 2px; opacity: 0.6; }
+
+        /* 3. HUMAN-FIGURE YOGESHWAR (Anatomical SVG) */
+        .yogeshwar-container { width: 220px; height: 280px; position: relative; transition: 4s ease-in-out; }
+        .inhale { transform: scale(1.05); filter: drop-shadow(0 0 30px var(--blue)); }
+        
+        /* 4. MANTRA & TIME */
+        #mantra { font-size: 2.5rem; letter-spacing: 12px; font-weight: 200; color: var(--blue); text-shadow: 0 0 20px var(--blue); margin-top: 20px; }
+        #timer { font-size: 4rem; font-weight: 100; opacity: 0.3; margin-top: -10px; }
+
+        /* 5. INTERACTIVE CONTROLS */
+        .controls { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; }
+        .btn-main { 
+            background: none; border: 1px solid rgba(255,255,255,0.4); color: #fff; 
+            padding: 18px; border-radius: 50px; font-weight: bold; cursor: pointer;
+            letter-spacing: 3px; transition: 0.3s; backdrop-filter: blur(10px);
+        }
+        .btn-main:hover { background: #fff; color: #000; }
+        
+        .chip-row { display: flex; justify-content: center; gap: 10px; }
+        .chip { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; }
+        .chip.active { border-color: var(--blue); background: rgba(56, 189, 248, 0.1); }
+
+        /* 6. POSTURE & DATA LEDGER */
+        .data-footer { width: 100%; max-width: 320px; background: var(--glass); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .ledger-grid { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin-top: 10px; }
+        .day { width: 100%; aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 2px; }
+        .day.hot { background: var(--blue); box-shadow: 0 0 5px var(--blue); }
+
+        /* MODALS */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 100; align-items: center; justify-content: center; }
+        .modal-box { background: #111827; padding: 30px; border-radius: 30px; text-align: center; border: 1px solid var(--blue); width: 80%; }
+    </style>
+</head>
+<body>
+    <div class="pashupati-bg"></div>
+    
+    <div class="app-shell">
+        <div class="header">
+            <span id="loc">PATIALA | 5:00 AM</span>
+            <span id="streak">🔥 14 DAY STREAK</span>
+        </div>
+
+        <div id="yogeshwar" class="yogeshwar-container">
+            <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100,50 Q100,20 130,50 T100,80 T70,50 T100,20" fill="none" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                <circle cx="100" cy="45" r="22" fill="var(--glass)" stroke="white" stroke-width="1"/>
+                <text x="100" y="48" fill="white" font-size="10" text-anchor="middle" opacity="0.8">𐤇</text>
+                <ellipse id="chest" cx="100" cy="110" rx="35" ry="50" fill="url(#grad1)"/>
+                <defs>
+                    <radialGradient id="grad1">
+                        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.6"/>
+                        <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <path d="M40,200 Q100,160 160,200 Q100,230 40,200" fill="none" stroke="white" stroke-width="1" opacity="0.5"/>
+            </svg>
+        </div>
+
+        <div id="mantra">SO-HAM</div>
+        <div id="timer">10:00</div>
+
+        <div class="controls">
+            <div class="chip-row">
+                <button class="chip active" onclick="setMins(10, this)">10m</button>
+                <button class="chip" onclick="setMins(20, this)">20m</button>
+                <button class="chip" onclick="switchMantra()">MANTRA</button>
+            </div>
+            <button class="btn-main" id="actionBtn" onclick="handleStart()">BEGIN SADHANA</button>
+        </div>
+
+        <div class="data-footer">
+            <div style="font-size: 0.6rem; opacity: 0.4; text-transform: uppercase;">Sadhana Ledger</div>
+            <div id="ledger" class="ledger-grid"></div>
+        </div>
+    </div>
+
+    <div id="moodModal" class="modal">
+        <div class="modal-box">
+            <h3 style="margin-top:0">Energy State?</h3>
+            <div class="chip-row" style="flex-wrap: wrap;">
+                <button class="chip" onclick="engage('Calm')">Calm</button>
+                <button class="chip" onclick="engage('Focused')">Focused</button>
+                <button class="chip" onclick="engage('Tired')">Tired</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="verifyModal" class="modal">
+        <div class="modal-box">
+            <h3>Vigilance Verified?</h3>
+            <p>Dongs heard during silence:</p>
+            <input type="number" id="dongInput" style="background:none; border:1px solid #fff; color:#fff; padding:10px; width:50px; text-align:center;">
+            <br><br>
+            <button class="btn-main" onclick="finish()">VERIFY</button>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx, isPlaying = false, timeLeft = 600, dongs = 0, scores = [], mIdx = 0;
+        const mantras = ["SO-HAM", "AUM", "OM NAMAH SHIVAYA"];
+
+        // Ledger Gen
+        const grid = document.getElementById('ledger');
+        for(let i=0; i<28; i++) {
+            const d = document.createElement('div');
+            d.className = 'day' + (i > 15 ? ' hot' : '');
+            grid.appendChild(d);
+        }
+
+        function switchMantra() {
+            mIdx = (mIdx + 1) % mantras.length;
+            document.getElementById('mantra').textContent = mantras[mIdx];
+        }
+
+        function setMins(m, btn) {
+            timeLeft = m * 60;
+            document.getElementById('timer').textContent = m + ":00";
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function handleStart() {
+            if(!isPlaying) document.getElementById('moodModal').style.display = 'flex';
+            else document.getElementById('verifyModal').style.display = 'flex';
+        }
+
+        function engage(mood) {
+            isPlaying = true;
+            document.getElementById('moodModal').style.display = 'none';
+            document.getElementById('actionBtn').textContent = "STOP SESSION";
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Random Vigilance Dongs
+            dongs = Math.floor(Math.random() * 3) + 3;
+            for(let i=0; i<dongs; i++) {
+                setTimeout(() => { if(isPlaying) tone(440, 0.2, 1); }, Math.random() * (timeLeft - 30) * 1000 + 10000);
+            }
+
+            loop();
+            tick();
+        }
+
+        function loop() {
+            if(!isPlaying) return;
+            const y = document.getElementById('yogeshwar');
+            y.classList.add('inhale');
+            
+            // Stillness Sound
+            if(getStillness() > 0.9) tone(60, 0.1, 0.5); // Deep Thump
+
+            setTimeout(() => {
+                if(!isPlaying) return;
+                y.classList.remove('inhale');
+                let s = getStillness();
+                if(s > 0.98) tone(110, 0.2, 3); // Conch
+                else if(s > 0.95) tone(523, 0.1, 1); // Flute
+                setTimeout(loop, 4000);
+            }, 4000);
+        }
+
+        function tone(f, v, d) {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.frequency.setValueAtTime(f, audioCtx.currentTime);
+            g.gain.setValueAtTime(0, audioCtx.currentTime);
+            g.gain.linearRampToValueAtTime(v, audioCtx.currentTime + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + d);
+        }
+
+        function getStillness() { return 0.99; /* Placeholder for sensor logic */ }
+
+        function tick() {
+            setInterval(() => {
+                if(isPlaying && timeLeft > 0) {
+                    timeLeft--;
+                    let m = Math.floor(timeLeft/60), s = timeLeft%60;
+                    document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+                }
+            }, 1000);
+        }
+
+        function finish() {
+            const guess = parseInt(document.getElementById('dongInput').value);
+            alert(`Sadhana Complete.\nAccuracy: ${guess == dongs ? '100%' : 'Check Vigilance'}\nState: Alpha-Theta`);
+            location.reload();
+        }
+    </script>
+</body>
+</html>
