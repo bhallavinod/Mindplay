@@ -3,63 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZenSpace Pro | Ambient Sadhana</title>
+    <title>ZenSpace Pro | Ultimate Master</title>
     <style>
-        :root { --blue: #38bdf8; --bg: #020617; --glass: rgba(255, 255, 255, 0.05); }
+        :root { --blue: #38bdf8; --bg: #020617; --glass: rgba(255, 255, 255, 0.07); }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; height: 100vh; }
-        .seal-bg { position: fixed; inset: 0; background: url('pashupati.png') center/cover; opacity: 0.12; filter: sepia(0.5); z-index: -1; }
-        .app-shell { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 25px 20px; box-sizing: border-box; }
         
-        /* Human Figure */
-        .yogeshwar { width: 220px; height: 260px; transition: transform 4s ease-in-out; }
-        .inhale { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--blue)); }
+        /* Background */
+        .seal-bg { position: fixed; inset: 0; background: url('pashupati.png') center/cover; opacity: 0.1; filter: sepia(0.5); z-index: -1; }
         
-        #mantraText { font-size: 2.2rem; letter-spacing: 10px; color: var(--blue); text-shadow: 0 0 15px var(--blue); margin: 10px 0; height: 40px; }
-        #timer { font-size: 3rem; font-weight: 100; opacity: 0.4; }
+        /* Layout Fix: Scrollable shell to prevent "Out of Screen" issues */
+        .app-shell { height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; overflow-y: auto; scrollbar-width: none; }
+        .app-shell::-webkit-scrollbar { display: none; }
 
-        /* Time Selection Grid */
-        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; width: 100%; max-width: 320px; }
-        .chip { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
+        /* Yogeshwar Figure */
+        .yogeshwar { width: 180px; height: 220px; transition: transform 4s ease-in-out; flex-shrink: 0; }
+        .inhale { transform: scale(1.1); filter: drop-shadow(0 0 25px var(--blue)); }
+        
+        #mantraDisplay { font-size: 2rem; letter-spacing: 8px; color: var(--blue); margin: 10px 0; text-align: center; height: 40px; }
+        #timer { font-size: 2.5rem; font-weight: 100; opacity: 0.5; margin-bottom: 10px; }
+
+        /* UI Components */
+        .control-panel { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        
+        .chip { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px 4px; border-radius: 12px; font-size: 0.7rem; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
         .chip.active { border-color: var(--blue); background: rgba(56, 189, 248, 0.2); }
 
-        .btn-main { background: none; border: 1px solid #fff; color: #fff; padding: 20px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 320px; cursor: pointer; letter-spacing: 3px; transition: 0.4s; }
-        .btn-main:active { background: #fff; color: #000; }
+        .btn-main { background: none; border: 1.5px solid #fff; color: #fff; padding: 18px; border-radius: 50px; font-weight: bold; cursor: pointer; letter-spacing: 2px; margin-top: 5px; }
+
+        /* Maps */
+        .maps-row { display: flex; justify-content: space-around; align-items: center; width: 100%; margin: 15px 0; background: var(--glass); padding: 10px; border-radius: 15px; }
+        .seat-map { width: 50px; height: 50px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; position: relative; }
+        #postureDot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: 0.1s; }
+        
+        .heatmap { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
+        .sq { width: 12px; height: 12px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .sq.active { background: var(--blue); }
+
+        /* Modal */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #0f172a; padding: 25px; border-radius: 25px; border: 1px solid var(--blue); text-align: center; width: 100%; max-width: 300px; }
     </style>
 </head>
 <body>
     <div class="seal-bg"></div>
     <div class="app-shell">
-        <div style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;">PATIALA RESEARCH UNIT</div>
+        <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 2px; margin-bottom: 10px;">PATIALA RESEARCH UNIT | 2026</div>
 
         <div id="yogeshwar" class="yogeshwar">
             <svg viewBox="0 0 200 250">
-                <circle cx="100" cy="45" r="22" fill="none" stroke="white" stroke-width="1"/>
+                <circle cx="100" cy="45" r="22" fill="none" stroke="white" stroke-width="0.8"/>
                 <text x="100" y="49" fill="white" font-size="10" text-anchor="middle">𐤇</text>
-                <path id="lungs" d="M100,80 Q140,80 140,130 Q100,160 60,130 Q60,80 100,80" fill="var(--blue)" fill-opacity="0.2">
-                    <animate attributeName="fill-opacity" values="0.2;0.5;0.2" dur="8s" repeatCount="indefinite" />
-                </path>
-                <path d="M40,210 Q100,180 160,210 Q100,240 40,210" fill="none" stroke="white" stroke-opacity="0.3"/>
+                <path id="lungs" d="M100,80 Q140,80 140,130 Q100,160 60,130 Q60,80 100,80" fill="var(--blue)" fill-opacity="0.3"/>
             </svg>
         </div>
 
-        <div id="mantraText">READY</div>
+        <div id="mantraDisplay">OM</div>
         <div id="timer">10:00</div>
 
-        <div class="time-grid">
-            <button class="chip active" onclick="setT(10, this)">10m</button>
-            <button class="chip" onclick="setT(30, this)">30m</button>
-            <button class="chip" onclick="setT(45, this)">45m</button>
-            <button class="chip" onclick="setT(60, this)">60m</button>
-            <button class="chip" onclick="changeMantra()">MANTRA</button>
-            <button class="chip" onclick="toggleRain()">RAIN: OFF</button>
+        <div class="control-panel">
+            <div class="grid-3">
+                <button class="chip" onclick="setT(30, this)">30m</button>
+                <button class="chip" onclick="setT(45, this)">45m</button>
+                <button class="chip" onclick="setT(60, this)">60m</button>
+            </div>
+            <div class="grid-3">
+                <button class="chip active" id="amb-rain" onclick="toggleAmb('rain')">Rain</button>
+                <button class="chip" id="amb-wind" onclick="toggleAmb('wind')">Wind</button>
+                <button class="chip" id="amb-forest" onclick="toggleAmb('forest')">Forest</button>
+                <button class="chip" id="amb-waves" onclick="toggleAmb('waves')">Waves</button>
+                <button class="chip" id="amb-river" onclick="toggleAmb('river')">River</button>
+                <button class="chip" id="amb-cave" onclick="toggleAmb('cave')">Cave</button>
+            </div>
+            <button class="btn-main" id="masterBtn" onclick="init()">BEGIN SADHANA</button>
         </div>
 
-        <button class="btn-main" id="masterBtn" onclick="initiate()">BEGIN SADHANA</button>
+        <div class="maps-row">
+            <div class="seat-map"><div id="postureDot"></div></div>
+            <div class="heatmap" id="heatmap"></div>
+        </div>
+    </div>
+
+    <div id="alertModal" class="modal">
+        <div class="modal-content">
+            <h3>Alertness Check</h3>
+            <p style="font-size:0.8rem; opacity:0.7">Enter the count for each bell type:</p>
+            <div style="display:flex; flex-direction:column; gap:10px; margin:15px 0;">
+                <input type="number" id="lowCount" placeholder="Low Bells (Drum)">
+                <input type="number" id="medCount" placeholder="Med Bells (Flute)">
+                <input type="number" id="highCount" placeholder="High Bells (Conch)">
+            </div>
+            <button class="btn-main" onclick="verifyAlertness()">VERIFY STATE</button>
+        </div>
     </div>
 
     <script>
-        let audioCtx, isPlaying = false, timeLeft = 600, rainNode, mIdx = 0, rainOn = false;
-        const mantras = ["SO-HAM", "AUM", "OM NAMAH SHIVAYA"];
+        let audioCtx, isPlaying = false, timeLeft = 600, scores = [];
+        let actualCounts = { low: 0, med: 0, high: 0 };
+        let activeAmbients = { rain: false, wind: false, forest: false, waves: false, river: false, cave: false };
+        let nodes = {};
+
+        // Init Heatmap
+        const hm = document.getElementById('heatmap');
+        for(let i=0; i<30; i++) {
+            const s = document.createElement('div');
+            s.className = 'sq' + (i > 20 ? ' active' : '');
+            hm.appendChild(s);
+        }
 
         function setT(m, b) {
             if(isPlaying) return;
@@ -69,95 +119,119 @@
             b.classList.add('active');
         }
 
-        function changeMantra() {
-            mIdx = (mIdx + 1) % mantras.length;
-            document.getElementById('mantraText').textContent = mantras[mIdx];
+        function toggleAmb(type) {
+            activeAmbients[type] = !activeAmbients[type];
+            document.getElementById('amb-'+type).classList.toggle('active');
+            if(isPlaying) updateAudio();
         }
 
-        function toggleRain() {
-            rainOn = !rainOn;
-            event.target.textContent = rainOn ? "RAIN: ON" : "RAIN: OFF";
-            if(isPlaying && rainOn) startRain(); else stopRain();
-        }
-
-        async function initiate() {
+        async function init() {
             if(!isPlaying) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 await audioCtx.resume();
                 isPlaying = true;
-                document.getElementById('masterBtn').textContent = "STOP SESSION";
-                if(rainOn) startRain();
-                sadhanaLoop();
-                startTimer();
+                document.getElementById('masterBtn').textContent = "STOP";
+                startSadhana();
+                initSensors();
             } else {
-                location.reload();
+                document.getElementById('alertModal').style.display = 'flex';
             }
         }
 
-        function sadhanaLoop() {
-            if(!isPlaying) return;
-            const y = document.getElementById('yogeshwar');
-            const m = document.getElementById('mantraText');
-            
-            // INHALE
-            y.classList.add('inhale');
-            m.textContent = mantras[mIdx].split('-')[0] || mantras[mIdx];
-            speak(m.textContent);
-            playTone(80, 0.1, 2); // Breath Air Sound
-
-            setTimeout(() => {
-                if(!isPlaying) return;
-                // EXHALE
-                y.classList.remove('inhale');
-                m.textContent = mantras[mIdx].split('-')[1] || mantras[mIdx];
-                speak(m.textContent);
-                playTone(60, 0.1, 2); // Breath Air Sound
-                
-                setTimeout(sadhanaLoop, 4000);
-            }, 4000);
-        }
-
-        function speak(txt) {
-            const ut = new SpeechSynthesisUtterance(txt);
-            ut.rate = 0.6; ut.pitch = 0.8; ut.volume = 0.5;
-            window.speechSynthesis.speak(ut);
-        }
-
-        function startRain() {
-            const bufferSize = 2 * audioCtx.sampleRate,
-            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
-            output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
-            rainNode = audioCtx.createBufferSource();
-            rainNode.buffer = noiseBuffer;
-            rainNode.loop = true;
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass'; filter.frequency.value = 400;
-            const gain = audioCtx.createGain(); gain.gain.value = 0.05;
-            rainNode.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-            rainNode.start();
-        }
-
-        function stopRain() { if(rainNode) rainNode.stop(); }
-
-        function playTone(f, v, d) {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.frequency.setValueAtTime(f, audioCtx.currentTime);
-            g.gain.linearRampToValueAtTime(v, audioCtx.currentTime + 1);
-            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
-            o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + d);
-        }
-
-        function startTimer() {
+        function startSadhana() {
+            updateAudio();
+            loop();
+            // Schedule random vigilance dongs
+            ['low', 'med', 'high'].forEach(type => {
+                let count = Math.floor(Math.random() * 3) + 2;
+                actualCounts[type] = count;
+                for(let i=0; i<count; i++) {
+                    let delay = Math.random() * (timeLeft - 20) * 1000 + 10000;
+                    setTimeout(() => { if(isPlaying) playDong(type); }, delay);
+                }
+            });
             setInterval(() => {
                 if(isPlaying && timeLeft > 0) {
                     timeLeft--;
-                    let mins = Math.floor(timeLeft/60), secs = timeLeft%60;
-                    document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2,'0')}`;
+                    let m = Math.floor(timeLeft/60), s = timeLeft%60;
+                    document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
                 }
             }, 1000);
+        }
+
+        function loop() {
+            if(!isPlaying) return;
+            const y = document.getElementById('yogeshwar');
+            y.classList.add('inhale');
+            speak("OM");
+            // Drum Thump (Low Stillness check)
+            playDong('low', 0.2); 
+
+            setTimeout(() => {
+                if(!isPlaying) return;
+                y.classList.remove('inhale');
+                // Check Stillness for rewards
+                let s = getStillness();
+                if(s > 0.98) playDong('high'); // Conch
+                else if(s > 0.95) playDong('med'); // Flute
+                setTimeout(loop, 4000);
+            }, 4000);
+        }
+
+        function playDong(type, vol = 0.4) {
+            let freq = type === 'low' ? 80 : (type === 'med' ? 523 : 880);
+            let wave = type === 'low' ? 'sine' : (type === 'med' ? 'triangle' : 'sawtooth');
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = wave; o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            g.gain.setValueAtTime(0, audioCtx.currentTime);
+            g.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + 2);
+        }
+
+        function speak(t) {
+            const u = new SpeechSynthesisUtterance(t);
+            u.rate = 0.5; u.pitch = 0.5; u.volume = 0.3;
+            window.speechSynthesis.speak(u);
+        }
+
+        function updateAudio() {
+            Object.keys(activeAmbients).forEach(type => {
+                if(activeAmbients[type] && !nodes[type]) nodes[type] = startNoise(type);
+                else if(!activeAmbients[type] && nodes[type]) { nodes[type].stop(); nodes[type] = null; }
+            });
+        }
+
+        function startNoise(type) {
+            const bufSize = 2 * audioCtx.sampleRate, buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate), out = buf.getChannelData(0);
+            for (let i = 0; i < bufSize; i++) out[i] = Math.random() * 2 - 1;
+            const src = audioCtx.createBufferSource(); src.buffer = buf; src.loop = true;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass'; 
+            filter.frequency.value = type === 'rain' ? 400 : (type === 'wind' ? 200 : 800);
+            const g = audioCtx.createGain(); g.gain.value = 0.03;
+            src.connect(filter); filter.connect(g); g.connect(audioCtx.destination);
+            src.start(); return src;
+        }
+
+        function initSensors() {
+            window.addEventListener('devicemotion', (e) => {
+                if(!isPlaying) return;
+                const x = e.accelerationIncludingGravity.x || 0, y = e.accelerationIncludingGravity.y || 0;
+                document.getElementById('postureDot').style.left = `${50 + (x * 4)}%`;
+                document.getElementById('postureDot').style.top = `${50 + (y * 4)}%`;
+                scores.push(Math.max(0, 1 - (Math.sqrt(x*x+y*y)/20)));
+            });
+        }
+
+        function getStillness() { return scores.length ? scores.reduce((a,b)=>a+b)/scores.length : 0; }
+
+        function verifyAlertness() {
+            alert("Verification Complete. State: Deep Alpha. Accuracy: " + 
+                  (document.getElementById('medCount').value == actualCounts.med ? "100%" : "Check Stats"));
+            location.reload();
         }
     </script>
 </body>
