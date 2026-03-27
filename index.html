@@ -152,22 +152,33 @@
             if(!isPlaying) document.getElementById('moodModal').style.display = 'flex';
             else document.getElementById('verifyModal').style.display = 'flex';
         }
+function engage(mood) {
+    // 1. Initialize the Audio Context immediately
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // 2. FORCE UNLOCK (The missing piece)
+    audioCtx.resume().then(() => {
+        console.log('Playback resumed successfully');
+        
+        isPlaying = true;
+        document.getElementById('moodModal').style.display = 'none';
+        document.getElementById('actionBtn').textContent = "STOP SESSION";
+        
+        // 3. Play an immediate "Verification Tone" (A loud 1-second bell)
+        tone(440, 0.5, 1); 
 
-        function engage(mood) {
-            isPlaying = true;
-            document.getElementById('moodModal').style.display = 'none';
-            document.getElementById('actionBtn').textContent = "STOP SESSION";
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Random Vigilance Dongs
-            dongs = Math.floor(Math.random() * 3) + 3;
-            for(let i=0; i<dongs; i++) {
-                setTimeout(() => { if(isPlaying) tone(440, 0.2, 1); }, Math.random() * (timeLeft - 30) * 1000 + 10000);
-            }
-
-            loop();
-            tick();
+        // 4. Random Vigilance Dongs
+        dongs = Math.floor(Math.random() * 3) + 3;
+        for(let i=0; i<dongs; i++) {
+            setTimeout(() => { 
+                if(isPlaying) tone(440, 0.2, 1); 
+            }, Math.random() * (timeLeft - 30) * 1000 + 10000);
         }
+
+        loop();
+        tick();
+    });
+}
 
         function loop() {
             if(!isPlaying) return;
