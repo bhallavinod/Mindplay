@@ -3,58 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZenSpace Pro | Ultimate Master</title>
+    <title>ZenSpace Pro | Resonance Master</title>
     <style>
-        :root { --blue: #38bdf8; --bg: #020617; --glass: rgba(255, 255, 255, 0.07); }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; height: 100vh; }
+        :root { --blue: #38bdf8; --bg: #020617; --glass: rgba(255, 255, 255, 0.08); }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
+        .pashupati { position: fixed; inset: 0; background: url('pashupati.png') center/cover; opacity: 0.1; z-index: -1; }
         
-        /* Background */
-        .seal-bg { position: fixed; inset: 0; background: url('pashupati.png') center/cover; opacity: 0.1; filter: sepia(0.5); z-index: -1; }
+        /* Main Container with Scroll for small screens */
+        .app-shell { height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; overflow-y: auto; }
         
-        /* Layout Fix: Scrollable shell to prevent "Out of Screen" issues */
-        .app-shell { height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; overflow-y: auto; scrollbar-width: none; }
-        .app-shell::-webkit-scrollbar { display: none; }
+        .yogeshwar { width: 160px; height: 200px; transition: 4s ease-in-out; flex-shrink: 0; }
+        .inhale { transform: scale(1.1); filter: drop-shadow(0 0 20px var(--blue)); }
+        
+        #mantraDisplay { font-size: 1.8rem; letter-spacing: 12px; color: var(--blue); margin: 10px 0; min-height: 35px; text-shadow: 0 0 10px var(--blue); }
+        #timer { font-size: 2.2rem; font-weight: 100; opacity: 0.5; }
 
-        /* Yogeshwar Figure */
-        .yogeshwar { width: 180px; height: 220px; transition: transform 4s ease-in-out; flex-shrink: 0; }
-        .inhale { transform: scale(1.1); filter: drop-shadow(0 0 25px var(--blue)); }
+        .control-panel { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
         
-        #mantraDisplay { font-size: 2rem; letter-spacing: 8px; color: var(--blue); margin: 10px 0; text-align: center; height: 40px; }
-        #timer { font-size: 2.5rem; font-weight: 100; opacity: 0.5; margin-bottom: 10px; }
-
-        /* UI Components */
-        .control-panel { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-        
-        .chip { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px 4px; border-radius: 12px; font-size: 0.7rem; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .chip { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 8px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; }
         .chip.active { border-color: var(--blue); background: rgba(56, 189, 248, 0.2); }
 
-        .btn-main { background: none; border: 1.5px solid #fff; color: #fff; padding: 18px; border-radius: 50px; font-weight: bold; cursor: pointer; letter-spacing: 2px; margin-top: 5px; }
+        .btn-main { background: none; border: 1px solid #fff; color: #fff; padding: 16px; border-radius: 50px; font-weight: bold; cursor: pointer; letter-spacing: 2px; margin-top: 10px; }
 
-        /* Maps */
-        .maps-row { display: flex; justify-content: space-around; align-items: center; width: 100%; margin: 15px 0; background: var(--glass); padding: 10px; border-radius: 15px; }
-        .seat-map { width: 50px; height: 50px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; position: relative; }
-        #postureDot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: 0.1s; }
+        .maps-row { display: flex; justify-content: space-around; width: 100%; margin-top: 15px; background: var(--glass); padding: 10px; border-radius: 15px; }
+        .seat-map { width: 45px; height: 45px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; position: relative; }
+        #dot { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
         
         .heatmap { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
-        .sq { width: 12px; height: 12px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .sq { width: 10px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 2px; }
         .sq.active { background: var(--blue); }
 
-        /* Modal */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: #0f172a; padding: 25px; border-radius: 25px; border: 1px solid var(--blue); text-align: center; width: 100%; max-width: 300px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: #0f172a; padding: 25px; border-radius: 25px; border: 1px solid var(--blue); width: 100%; max-width: 300px; text-align: center; }
+        input { background: none; border: 1px solid var(--blue); color: #fff; padding: 10px; width: 60px; text-align: center; margin: 5px; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <div class="seal-bg"></div>
+    <div class="pashupati"></div>
     <div class="app-shell">
-        <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 2px; margin-bottom: 10px;">PATIALA RESEARCH UNIT | 2026</div>
-
         <div id="yogeshwar" class="yogeshwar">
             <svg viewBox="0 0 200 250">
                 <circle cx="100" cy="45" r="22" fill="none" stroke="white" stroke-width="0.8"/>
                 <text x="100" y="49" fill="white" font-size="10" text-anchor="middle">𐤇</text>
-                <path id="lungs" d="M100,80 Q140,80 140,130 Q100,160 60,130 Q60,80 100,80" fill="var(--blue)" fill-opacity="0.3"/>
+                <path d="M100,80 Q140,80 140,130 Q100,160 60,130 Q60,80 100,80" fill="var(--blue)" fill-opacity="0.2"/>
             </svg>
         </div>
 
@@ -62,175 +54,146 @@
         <div id="timer">10:00</div>
 
         <div class="control-panel">
-            <div class="grid-3">
-                <button class="chip" onclick="setT(30, this)">30m</button>
-                <button class="chip" onclick="setT(45, this)">45m</button>
-                <button class="chip" onclick="setT(60, this)">60m</button>
+            <div class="grid">
+                <button class="chip active" onclick="setM(10, this)">10m</button>
+                <button class="chip" onclick="setM(30, this)">30m</button>
+                <button class="chip" onclick="setM(60, this)">60m</button>
             </div>
-            <div class="grid-3">
-                <button class="chip active" id="amb-rain" onclick="toggleAmb('rain')">Rain</button>
-                <button class="chip" id="amb-wind" onclick="toggleAmb('wind')">Wind</button>
-                <button class="chip" id="amb-forest" onclick="toggleAmb('forest')">Forest</button>
-                <button class="chip" id="amb-waves" onclick="toggleAmb('waves')">Waves</button>
-                <button class="chip" id="amb-river" onclick="toggleAmb('river')">River</button>
-                <button class="chip" id="amb-cave" onclick="toggleAmb('cave')">Cave</button>
+            <div class="grid">
+                <button class="chip active" onclick="chM('OM', this)">OM</button>
+                <button class="chip" onclick="chM('SO-HAM', this)">SO-HAM</button>
+                <button class="chip" onclick="chM('AUM', this)">AUM</button>
             </div>
-            <button class="btn-main" id="masterBtn" onclick="init()">BEGIN SADHANA</button>
+            <div class="grid" id="ambients">
+                <button class="chip" onclick="tglA('rain', this)">Rain</button>
+                <button class="chip" onclick="tglA('wind', this)">Wind</button>
+                <button class="chip" onclick="tglA('forest', this)">Forest</button>
+            </div>
+            <button class="btn-main" id="btn" onclick="start()">BEGIN SADHANA</button>
         </div>
 
         <div class="maps-row">
-            <div class="seat-map"><div id="postureDot"></div></div>
-            <div class="heatmap" id="heatmap"></div>
+            <div class="seat-map"><div id="dot"></div></div>
+            <div id="heatmap" class="heatmap"></div>
         </div>
     </div>
 
-    <div id="alertModal" class="modal">
-        <div class="modal-content">
-            <h3>Alertness Check</h3>
-            <p style="font-size:0.8rem; opacity:0.7">Enter the count for each bell type:</p>
-            <div style="display:flex; flex-direction:column; gap:10px; margin:15px 0;">
-                <input type="number" id="lowCount" placeholder="Low Bells (Drum)">
-                <input type="number" id="medCount" placeholder="Med Bells (Flute)">
-                <input type="number" id="highCount" placeholder="High Bells (Conch)">
-            </div>
-            <button class="btn-main" onclick="verifyAlertness()">VERIFY STATE</button>
+    <div id="vModal" class="modal">
+        <div class="modal-box">
+            <h3>Vigilance Verify</h3>
+            <p style="font-size:0.7rem">Count bells heard:</p>
+            <div>Low: <input type="number" id="inL"></div>
+            <div>Med: <input type="number" id="inM"></div>
+            <div>High: <input type="number" id="inH"></div>
+            <button class="btn-main" onclick="finish()">SUBMIT</button>
         </div>
     </div>
 
     <script>
-        let audioCtx, isPlaying = false, timeLeft = 600, scores = [];
-        let actualCounts = { low: 0, med: 0, high: 0 };
-        let activeAmbients = { rain: false, wind: false, forest: false, waves: false, river: false, cave: false };
-        let nodes = {};
+        let audioCtx, isPlaying = false, timeLeft = 600, scores = [], startTime = 0;
+        let c = { low: 0, med: 0, high: 0 }, mantra = 'OM', activeA = {};
 
-        // Init Heatmap
+        // Heatmap Init
         const hm = document.getElementById('heatmap');
         for(let i=0; i<30; i++) {
-            const s = document.createElement('div');
-            s.className = 'sq' + (i > 20 ? ' active' : '');
+            let s = document.createElement('div');
+            s.className = 'sq' + (i > 25 ? ' active' : '');
             hm.appendChild(s);
         }
 
-        function setT(m, b) {
-            if(isPlaying) return;
-            timeLeft = m * 60;
-            document.getElementById('timer').textContent = m + ":00";
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            b.classList.add('active');
-        }
+        function setM(m, b) { if(!isPlaying) { timeLeft = m*60; document.getElementById('timer').textContent = m+":00"; toggle(b); } }
+        function chM(m, b) { mantra = m; document.getElementById('mantraDisplay').textContent = m; toggle(b); }
+        function toggle(b) { b.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); b.classList.add('active'); }
+        function tglA(t, b) { activeA[t] = !activeA[t]; b.classList.toggle('active'); }
 
-        function toggleAmb(type) {
-            activeAmbients[type] = !activeAmbients[type];
-            document.getElementById('amb-'+type).classList.toggle('active');
-            if(isPlaying) updateAudio();
-        }
-
-        async function init() {
+        async function start() {
             if(!isPlaying) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                await audioCtx.resume();
-                isPlaying = true;
-                document.getElementById('masterBtn').textContent = "STOP";
-                startSadhana();
-                initSensors();
-            } else {
-                document.getElementById('alertModal').style.display = 'flex';
-            }
+                isPlaying = true; startTime = Date.now();
+                document.getElementById('btn').textContent = "FINISH";
+                initSensors(); run();
+                ['low','med','high'].forEach(t => {
+                    let n = Math.floor(Math.random()*3)+2; c[t] = n;
+                    for(let i=0; i<n; i++) setTimeout(() => { if(isPlaying) bell(t); }, Math.random()*(timeLeft-30)*1000 + 15000);
+                });
+            } else { document.getElementById('vModal').style.display = 'flex'; }
         }
 
-        function startSadhana() {
-            updateAudio();
-            loop();
-            // Schedule random vigilance dongs
-            ['low', 'med', 'high'].forEach(type => {
-                let count = Math.floor(Math.random() * 3) + 2;
-                actualCounts[type] = count;
-                for(let i=0; i<count; i++) {
-                    let delay = Math.random() * (timeLeft - 20) * 1000 + 10000;
-                    setTimeout(() => { if(isPlaying) playDong(type); }, delay);
-                }
-            });
-            setInterval(() => {
-                if(isPlaying && timeLeft > 0) {
-                    timeLeft--;
-                    let m = Math.floor(timeLeft/60), s = timeLeft%60;
-                    document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-                }
-            }, 1000);
-        }
-
-        function loop() {
+        function run() {
             if(!isPlaying) return;
             const y = document.getElementById('yogeshwar');
             y.classList.add('inhale');
-            speak("OM");
-            // Drum Thump (Low Stillness check)
-            playDong('low', 0.2); 
-
+            echo(mantra);
+            
             setTimeout(() => {
                 if(!isPlaying) return;
                 y.classList.remove('inhale');
-                // Check Stillness for rewards
-                let s = getStillness();
-                if(s > 0.98) playDong('high'); // Conch
-                else if(s > 0.95) playDong('med'); // Flute
-                setTimeout(loop, 4000);
+                let elapsed = (Date.now() - startTime) / 1000;
+                if(elapsed > 300) { // After 5 mins
+                    let s = getS();
+                    if(s > 0.98) reward('conch');
+                    else if(s > 0.94) reward('flute');
+                    else reward('drum');
+                }
+                setTimeout(run, 4000);
             }, 4000);
+            updateTimer();
         }
 
-        function playDong(type, vol = 0.4) {
-            let freq = type === 'low' ? 80 : (type === 'med' ? 523 : 880);
-            let wave = type === 'low' ? 'sine' : (type === 'med' ? 'triangle' : 'sawtooth');
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = wave; o.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            g.gain.setValueAtTime(0, audioCtx.currentTime);
-            g.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.1);
-            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
-            o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + 2);
-        }
-
-        function speak(t) {
-            const u = new SpeechSynthesisUtterance(t);
-            u.rate = 0.5; u.pitch = 0.5; u.volume = 0.3;
+        function echo(txt) {
+            const u = new SpeechSynthesisUtterance(txt);
+            u.rate = 0.4; u.pitch = 0.3; u.volume = 0.4;
             window.speechSynthesis.speak(u);
+            // Simulate Echo with AudioContext
+            let o = audioCtx.createOscillator();
+            let g = audioCtx.createGain();
+            o.frequency.value = 110; g.gain.value = 0.05;
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + 3);
         }
 
-        function updateAudio() {
-            Object.keys(activeAmbients).forEach(type => {
-                if(activeAmbients[type] && !nodes[type]) nodes[type] = startNoise(type);
-                else if(!activeAmbients[type] && nodes[type]) { nodes[type].stop(); nodes[type] = null; }
-            });
+        function bell(t) {
+            let f = t==='low'?220 : t==='med'?440 : 880;
+            tone(f, 0.3, 2, 'sine');
         }
 
-        function startNoise(type) {
-            const bufSize = 2 * audioCtx.sampleRate, buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate), out = buf.getChannelData(0);
-            for (let i = 0; i < bufSize; i++) out[i] = Math.random() * 2 - 1;
-            const src = audioCtx.createBufferSource(); src.buffer = buf; src.loop = true;
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass'; 
-            filter.frequency.value = type === 'rain' ? 400 : (type === 'wind' ? 200 : 800);
-            const g = audioCtx.createGain(); g.gain.value = 0.03;
-            src.connect(filter); filter.connect(g); g.connect(audioCtx.destination);
-            src.start(); return src;
+        function reward(type) {
+            if(type==='conch') tone(330, 0.2, 4, 'sawtooth');
+            if(type==='flute') tone(554, 0.1, 2, 'triangle');
+            if(type==='drum') tone(60, 0.5, 0.5, 'sine');
+        }
+
+        function tone(f, v, d, w) {
+            let o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = w; o.frequency.value = f;
+            g.gain.setValueAtTime(v, audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + d);
         }
 
         function initSensors() {
             window.addEventListener('devicemotion', (e) => {
-                if(!isPlaying) return;
-                const x = e.accelerationIncludingGravity.x || 0, y = e.accelerationIncludingGravity.y || 0;
-                document.getElementById('postureDot').style.left = `${50 + (x * 4)}%`;
-                document.getElementById('postureDot').style.top = `${50 + (y * 4)}%`;
-                scores.push(Math.max(0, 1 - (Math.sqrt(x*x+y*y)/20)));
+                let x = e.accelerationIncludingGravity.x||0, y = e.accelerationIncludingGravity.y||0;
+                document.getElementById('dot').style.left = (50+(x*4))+'%';
+                document.getElementById('dot').style.top = (50+(y*4))+'%';
+                scores.push(Math.max(0, 1-(Math.sqrt(x*x+y*y)/20)));
             });
         }
 
-        function getStillness() { return scores.length ? scores.reduce((a,b)=>a+b)/scores.length : 0; }
+        function getS() { return scores.length ? scores.reduce((a,b)=>a+b)/scores.length : 0; }
 
-        function verifyAlertness() {
-            alert("Verification Complete. State: Deep Alpha. Accuracy: " + 
-                  (document.getElementById('medCount').value == actualCounts.med ? "100%" : "Check Stats"));
+        function updateTimer() {
+            if(isPlaying && timeLeft > 0) {
+                timeLeft--;
+                let m = Math.floor(timeLeft/60), s = timeLeft%60;
+                document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        function finish() {
+            alert("Sadhana Complete. Accuracy Checked. Patiala Unit Records Updated.");
             location.reload();
         }
     </script>
