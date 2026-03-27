@@ -3,215 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZenSpace Pro | Yogeshwar Master</title>
+    <title>ZenSpace Pro | Ambient Sadhana</title>
     <style>
-        :root { --blue: #38bdf8; --gold: #f59e0b; --bg: #020617; --glass: rgba(255, 255, 255, 0.05); }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; height: 100vh; touch-action: none; }
-
-        /* 1. ANCIENT PASHUPATI OVERLAY */
-        .seal-bg { position: fixed; inset: 0; background: url('pashupati.png') center/cover; opacity: 0.12; filter: sepia(0.5) contrast(1.2); z-index: -1; }
-
-        .app-shell { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 30px 20px; box-sizing: border-box; }
-
-        /* 2. TOP STATUS */
-        .status-row { width: 100%; display: flex; justify-content: space-between; font-size: 0.7rem; letter-spacing: 2px; opacity: 0.5; }
-
-        /* 3. YOGESHWAR HUMAN FIGURE */
-        .yogeshwar { width: 240px; height: 280px; position: relative; transition: transform 4s ease-in-out; }
-        .inhale { transform: scale(1.08); filter: drop-shadow(0 0 35px var(--blue)); }
+        :root { --blue: #38bdf8; --bg: #020617; --glass: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; height: 100vh; }
+        .seal-bg { position: fixed; inset: 0; background: url('pashupati.png') center/cover; opacity: 0.12; filter: sepia(0.5); z-index: -1; }
+        .app-shell { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 25px 20px; box-sizing: border-box; }
         
-        #mantra { font-size: 2.8rem; letter-spacing: 12px; font-weight: 200; color: var(--blue); text-shadow: 0 0 20px var(--blue); margin: 15px 0; }
-        #timer { font-size: 3.5rem; font-weight: 100; opacity: 0.3; }
-
-        /* 4. MASTER CONTROLS */
-        .controls { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 320px; }
-        .btn-main { background: none; border: 1px solid rgba(255,255,255,0.4); color: #fff; padding: 20px; border-radius: 60px; font-weight: bold; cursor: pointer; letter-spacing: 4px; transition: 0.4s; backdrop-filter: blur(15px); }
-        .btn-main:active { transform: scale(0.95); background: #fff; color: #000; }
+        /* Human Figure */
+        .yogeshwar { width: 220px; height: 260px; transition: transform 4s ease-in-out; }
+        .inhale { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--blue)); }
         
-        .chip-row { display: flex; justify-content: center; gap: 8px; }
-        .chip { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
-        .chip.active { border-color: var(--blue); background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 10px var(--blue); }
+        #mantraText { font-size: 2.2rem; letter-spacing: 10px; color: var(--blue); text-shadow: 0 0 15px var(--blue); margin: 10px 0; height: 40px; }
+        #timer { font-size: 3rem; font-weight: 100; opacity: 0.4; }
 
-        /* 5. LEDGER HEATMAP */
-        .ledger-box { width: 100%; max-width: 320px; background: var(--glass); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .heatmap { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin-top: 10px; }
-        .sq { width: 100%; aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 2px; }
-        .sq.active { background: var(--blue); box-shadow: 0 0 4px var(--blue); }
+        /* Time Selection Grid */
+        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; width: 100%; max-width: 320px; }
+        .chip { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
+        .chip.active { border-color: var(--blue); background: rgba(56, 189, 248, 0.2); }
 
-        /* 6. MODALS */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal-box { background: #0f172a; padding: 35px; border-radius: 35px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.3); width: 85%; }
-        
-        .seat-map { width: 50px; height: 50px; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; position: relative; margin: 10px; }
-        #postureDot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+        .btn-main { background: none; border: 1px solid #fff; color: #fff; padding: 20px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 320px; cursor: pointer; letter-spacing: 3px; transition: 0.4s; }
+        .btn-main:active { background: #fff; color: #000; }
     </style>
 </head>
 <body>
     <div class="seal-bg"></div>
-    
     <div class="app-shell">
-        <div class="status-row">
-            <span>PATIALA | MUHURTA</span>
-            <span id="streakDisplay">🔥 14 DAY STREAK</span>
-        </div>
+        <div style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;">PATIALA RESEARCH UNIT</div>
 
         <div id="yogeshwar" class="yogeshwar">
-            <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="110" r="85" fill="none" stroke="var(--blue)" stroke-opacity="0.1" stroke-width="0.5"/>
-                <circle cx="100" cy="45" r="24" fill="var(--glass)" stroke="white" stroke-width="0.8"/>
-                <text x="100" y="49" fill="white" font-size="12" text-anchor="middle" font-weight="100">𐤇</text>
+            <svg viewBox="0 0 200 250">
+                <circle cx="100" cy="45" r="22" fill="none" stroke="white" stroke-width="1"/>
+                <text x="100" y="49" fill="white" font-size="10" text-anchor="middle">𐤇</text>
                 <path id="lungs" d="M100,80 Q140,80 140,130 Q100,160 60,130 Q60,80 100,80" fill="var(--blue)" fill-opacity="0.2">
-                    <animate attributeName="fill-opacity" values="0.2;0.6;0.2" dur="8s" repeatCount="indefinite" />
+                    <animate attributeName="fill-opacity" values="0.2;0.5;0.2" dur="8s" repeatCount="indefinite" />
                 </path>
-                <path d="M40,210 Q100,180 160,210 Q100,240 40,210" fill="none" stroke="white" stroke-width="1.5" stroke-opacity="0.4"/>
+                <path d="M40,210 Q100,180 160,210 Q100,240 40,210" fill="none" stroke="white" stroke-opacity="0.3"/>
             </svg>
         </div>
 
-        <div id="mantra">SO-HAM</div>
+        <div id="mantraText">READY</div>
         <div id="timer">10:00</div>
 
-        <div class="controls">
-            <div class="chip-row">
-                <button class="chip active" onclick="setSessionTime(10, this)">10m</button>
-                <button class="chip" onclick="setSessionTime(20, this)">20m</button>
-                <button class="chip" onclick="cycleMantra()">MANTRA</button>
-            </div>
-            <button class="btn-main" id="actionBtn" onclick="triggerStart()">BEGIN SADHANA</button>
+        <div class="time-grid">
+            <button class="chip active" onclick="setT(10, this)">10m</button>
+            <button class="chip" onclick="setT(30, this)">30m</button>
+            <button class="chip" onclick="setT(45, this)">45m</button>
+            <button class="chip" onclick="setT(60, this)">60m</button>
+            <button class="chip" onclick="changeMantra()">MANTRA</button>
+            <button class="chip" onclick="toggleRain()">RAIN: OFF</button>
         </div>
 
-        <div class="ledger-box">
-            <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px;">SADHANA LEDGER</div>
-            <div id="ledger" class="heatmap"></div>
-        </div>
-    </div>
-
-    <div id="moodModal" class="modal">
-        <div class="modal-box">
-            <h3 style="margin-top:0; font-weight:200;">Select Energy</h3>
-            <div class="chip-row" style="flex-wrap:wrap; gap:12px;">
-                <button class="chip" onclick="startFlow('Calm')">Calm</button>
-                <button class="chip" onclick="startFlow('Focus')">Focus</button>
-                <button class="chip" onclick="startFlow('Energy')">Energy</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="verifyModal" class="modal">
-        <div class="modal-box">
-            <h3>Vigilance Score</h3>
-            <p style="opacity:0.6">How many Dongs (Bells) were heard?</p>
-            <input type="number" id="dongCount" style="background:none; border:1px solid var(--blue); color:#fff; padding:15px; width:60px; text-align:center; font-size:1.5rem; border-radius:10px;">
-            <br><br>
-            <button class="btn-main" onclick="finalize()">FINISH</button>
-        </div>
+        <button class="btn-main" id="masterBtn" onclick="initiate()">BEGIN SADHANA</button>
     </div>
 
     <script>
-        let audioCtx, isPlaying = false, timeLeft = 600, dongsHeard = 0, scores = [], mIdx = 0;
+        let audioCtx, isPlaying = false, timeLeft = 600, rainNode, mIdx = 0, rainOn = false;
         const mantras = ["SO-HAM", "AUM", "OM NAMAH SHIVAYA"];
 
-        // Generate Ledger
-        const ledger = document.getElementById('ledger');
-        for(let i=0; i<28; i++) {
-            const d = document.createElement('div');
-            d.className = 'sq' + (i > 18 ? ' active' : '');
-            ledger.appendChild(d);
-        }
-
-        function setSessionTime(m, btn) {
+        function setT(m, b) {
             if(isPlaying) return;
             timeLeft = m * 60;
-            document.getElementById('timer').textContent = `${m}:00`;
+            document.getElementById('timer').textContent = m + ":00";
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
+            b.classList.add('active');
         }
 
-        function cycleMantra() {
+        function changeMantra() {
             mIdx = (mIdx + 1) % mantras.length;
-            document.getElementById('mantra').textContent = mantras[mIdx];
+            document.getElementById('mantraText').textContent = mantras[mIdx];
         }
 
-        function triggerStart() {
-            if(!isPlaying) document.getElementById('moodModal').style.display = 'flex';
-            else document.getElementById('verifyModal').style.display = 'flex';
+        function toggleRain() {
+            rainOn = !rainOn;
+            event.target.textContent = rainOn ? "RAIN: ON" : "RAIN: OFF";
+            if(isPlaying && rainOn) startRain(); else stopRain();
         }
 
-        async function startFlow(mood) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            await audioCtx.resume();
-            
-            isPlaying = true;
-            document.getElementById('moodModal').style.display = 'none';
-            document.getElementById('actionBtn').textContent = "STOP SESSION";
-            
-            // Initial Sacred Conch
-            playTone(220, 0.4, 2, 'sawtooth');
-
-            // Random Vigilance Dongs (Bells)
-            dongsHeard = Math.floor(Math.random() * 3) + 3;
-            for(let i=0; i<dongsHeard; i++) {
-                setTimeout(() => { if(isPlaying) playTone(523, 0.3, 1, 'sine'); }, 
-                Math.random() * (timeLeft - 40) * 1000 + 20000);
+        async function initiate() {
+            if(!isPlaying) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                await audioCtx.resume();
+                isPlaying = true;
+                document.getElementById('masterBtn').textContent = "STOP SESSION";
+                if(rainOn) startRain();
+                sadhanaLoop();
+                startTimer();
+            } else {
+                location.reload();
             }
-
-            sadhanaLoop();
-            runTimer();
         }
 
         function sadhanaLoop() {
             if(!isPlaying) return;
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-
             const y = document.getElementById('yogeshwar');
-            y.classList.add('inhale');
+            const m = document.getElementById('mantraText');
             
-            // Damru Thump & Vibration
-            playTone(65, 0.6, 0.5, 'sine');
-            if(navigator.vibrate) navigator.vibrate(50);
+            // INHALE
+            y.classList.add('inhale');
+            m.textContent = mantras[mIdx].split('-')[0] || mantras[mIdx];
+            speak(m.textContent);
+            playTone(80, 0.1, 2); // Breath Air Sound
 
             setTimeout(() => {
                 if(!isPlaying) return;
+                // EXHALE
                 y.classList.remove('inhale');
-                
-                // Reward Sounds for Stillness
-                playTone(110, 0.2, 1.5, 'triangle'); // Soft Flute
+                m.textContent = mantras[mIdx].split('-')[1] || mantras[mIdx];
+                speak(m.textContent);
+                playTone(60, 0.1, 2); // Breath Air Sound
                 
                 setTimeout(sadhanaLoop, 4000);
             }, 4000);
         }
 
-        function playTone(f, v, d, type) {
-            if(!audioCtx) return;
+        function speak(txt) {
+            const ut = new SpeechSynthesisUtterance(txt);
+            ut.rate = 0.6; ut.pitch = 0.8; ut.volume = 0.5;
+            window.speechSynthesis.speak(ut);
+        }
+
+        function startRain() {
+            const bufferSize = 2 * audioCtx.sampleRate,
+            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+            output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
+            rainNode = audioCtx.createBufferSource();
+            rainNode.buffer = noiseBuffer;
+            rainNode.loop = true;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass'; filter.frequency.value = 400;
+            const gain = audioCtx.createGain(); gain.gain.value = 0.05;
+            rainNode.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+            rainNode.start();
+        }
+
+        function stopRain() { if(rainNode) rainNode.stop(); }
+
+        function playTone(f, v, d) {
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.type = type;
             o.frequency.setValueAtTime(f, audioCtx.currentTime);
-            g.gain.setValueAtTime(0, audioCtx.currentTime);
-            g.gain.linearRampToValueAtTime(v, audioCtx.currentTime + 0.1);
+            g.gain.linearRampToValueAtTime(v, audioCtx.currentTime + 1);
             g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
             o.connect(g); g.connect(audioCtx.destination);
             o.start(); o.stop(audioCtx.currentTime + d);
         }
 
-        function runTimer() {
-            const t = setInterval(() => {
-                if(!isPlaying) { clearInterval(t); return; }
-                if(timeLeft > 0) {
+        function startTimer() {
+            setInterval(() => {
+                if(isPlaying && timeLeft > 0) {
                     timeLeft--;
-                    let m = Math.floor(timeLeft/60), s = timeLeft%60;
-                    document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-                } else {
-                    finalize();
-                    clearInterval(t);
+                    let mins = Math.floor(timeLeft/60), secs = timeLeft%60;
+                    document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2,'0')}`;
                 }
             }, 1000);
-        }
-
-        function finalize() {
-            const guess = parseInt(document.getElementById('dongCount').value);
-            const accuracy = (1 - Math.abs(dongsHeard - guess) / dongsHeard) * 100;
-            alert(`Sadhana Concluded.\nVigilance: ${accuracy.toFixed(0)}%\nState: Deep Alpha`);
-            location.reload();
         }
     </script>
 </body>
